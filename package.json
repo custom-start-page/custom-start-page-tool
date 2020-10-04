@@ -1,0 +1,17 @@
+{
+  "name": "custom-start-page-server",
+  "version": "0.0.0",
+  "description": "For building dynamic start pages that can be customised by the user.",
+  "main": "index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/custom-start-page/custom-start-page-server.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
