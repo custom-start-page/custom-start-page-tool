@@ -1,14 +1,14 @@
 {
-  "name": "custom-start-page-server",
+  "name": "custom-start-page-tool",
   "version": "0.0.0",
-  "description": "For building dynamic start pages that can be customised by the user.",
+  "description": "A CLI tool for helping you develop start pages that integrate with https://customstart.page.",
   "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/custom-start-page/custom-start-page-server.git"
+    "url": "git+https://github.com/custom-start-page/custom-start-page-tool.git"
   },
   "license": "MIT",
   "dependencies": {

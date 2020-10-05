@@ -1,4 +1,6 @@
-# Custom Start Page Server
+# Custom Start Page Tool
+
+> A CLI tool for helping you develop start pages that integrate with https://customstart.page.
 
 ## Requirements
 
