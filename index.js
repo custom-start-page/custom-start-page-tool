@@ -1,9 +1,15 @@
 const express = require('express')
 const fs = require('fs')
-const ejs = require('ejs');
+const ejs = require('ejs')
+
+const Theme = require('./theme.js')
+
+console.log(Theme)
 
 const app = express()
 const port = 3000
+
+const theme = new Theme()
 
 const routing = () => {
     const hostUserStartPage = () => {
@@ -11,37 +17,20 @@ const routing = () => {
             index: false,
         }))
 
-        if (fs.existsSync('index.ejs')) {
+        if (theme.isIndexTemplate()) {
             app.get('/', (req, res) => {
-                const data = {
-                    "links": [
-                        {
-                            "name": "Youtube",
-                            "url": "https://www.youtube.com"
-                        },
-                        {
-                            "name": "Netflix",
-                            "url": "https://www.netflix.com"
-                        },
-                        {
-                            "name": "Spotify",
-                            "url": "https://www.spotify.com"
-                        },
-                        {
-                            "name": "Prime",
-                            "url": "https://www.amazon.de/amazonprime?_encoding=UTF8&%2AVersion%2A=1&%2Aentries%2A=0"
-                        }
-                    ]
-                }
+                const data = theme.getDefaultdata()
 
-                const template = fs.readFileSync('index.ejs', { encoding: 'utf8', flag: 'r' })
+                const template = theme.getIndexTemplate()
                 const html = ejs.render(template, { data: data })
 
                 res.send(html)
-            });
+            })
         } else {
             app.get('/', (req, res) => {
-                res.sendFile(process.cwd() + '/index.html')
+                const html = theme.getIndexHtml()
+
+                res.send(html)
             })
         }
     }
