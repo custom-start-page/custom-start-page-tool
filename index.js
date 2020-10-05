@@ -1,13 +1,14 @@
 const express = require('express')
 const fs = require('fs')
 const ejs = require('ejs')
+const cookieParser = require('cookie-parser')
 
 const Theme = require('./theme.js')
 
-console.log(Theme)
-
 const app = express()
 const port = 3000
+
+app.use(cookieParser())
 
 const theme = new Theme()
 
@@ -17,22 +18,30 @@ const routing = () => {
             index: false,
         }))
 
-        if (theme.isIndexTemplate()) {
-            app.get('/', (req, res) => {
-                const data = theme.getDefaultdata()
+        app.get('/', (req, res) => {
+            if (theme.isIndexTemplate()) {
+                const dataCookie = req.cookies['customstart-data']
+                let data;
+
+                if (dataCookie != null) {
+                    data = JSON.parse(dataCookie)
+                } else {
+                    data = theme.getDefaultdata()
+                }
 
                 const template = theme.getIndexTemplate()
                 const html = ejs.render(template, { data: data })
 
                 res.send(html)
-            })
-        } else {
-            app.get('/', (req, res) => {
-                const html = theme.getIndexHtml()
+            } else {
+                app.get('/', (req, res) => {
+                    const html = theme.getIndexHtml()
 
-                res.send(html)
-            })
-        }
+                    res.send(html)
+                })
+
+            }
+        })
     }
 
     const hostSettings = () => {
