@@ -1,64 +1,35 @@
-import express from 'express'
-import ejs from 'ejs'
-import cookieParser from 'cookie-parser'
+import yargs from 'yargs'
+import Server from './server'
 
-import Theme from './theme'
+// const argv = yargs.options({
+//   port: { type: 'number' },
+// }).argv;
 
-const app = express()
-const port = 3000
+yargs
+    .command('server [port]', 'start the server', (yargs) => {
+        yargs
+            .positional('port', {
+                describe: 'port to bind on',
+                default: 3000,
+            })
+    }, (argv) => {
+        if (argv.verbose) console.info(`start server on :${argv.port}`)
 
-app.use(cookieParser())
+        const port: any = argv.port
 
-const theme = new Theme()
-
-const routing = () => {
-    const hostUserStartPage = () => {
-        app.use(express.static('.', {
-            index: false,
-        }))
-
-        app.get('/', (req, res) => {
-            if (theme.isIndexTemplate()) {
-                const dataCookie = req.cookies['customstart-data']
-                let data;
-
-                if (dataCookie != null) {
-                    data = JSON.parse(dataCookie)
-                } else {
-                    data = theme.getDefaultdata()
-                }
-
-                const template = theme.getIndexTemplate()
-                const html = ejs.render(template, { data: data })
-
-                res.send(html)
-            } else {
-                app.get('/', (req, res) => {
-                    const html = theme.getIndexHtml()
-
-                    res.send(html)
-                })
-
-            }
-        })
-    }
-
-    const hostSettings = () => {
-        // Files for the settings page to work.
-        app.use('/csp', express.static(__dirname + '/csp'))
-
-        // Actual settings page that lets the user customisable the page with.
-        app.get('/settings', (req, res) => {
-            res.sendFile(__dirname + '/csp/settings.html')
-        })
-    }
-
-    hostUserStartPage()
-    hostSettings()
-}
-
-routing()
-
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
+        new Server({ port: port })
+    })
+    .command('build', 'build your static website', (yargs) => {}, (argv) => {
+        console.error('not yet implemented')
+    })
+    .command('test', 'test if your startpage is compatible with https://customstart.page', (yargs) => {}, (argv) => {
+        console.error('not yet implemented')
+    })
+    .option('verbose', {
+        alias: 'v',
+        type: 'boolean',
+        description: 'Run with verbose logging'
+    })
+    .demandCommand()
+    .help()
+    .argv
