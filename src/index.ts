@@ -1,9 +1,8 @@
-const express = require('express')
-const fs = require('fs')
-const ejs = require('ejs')
-const cookieParser = require('cookie-parser')
+import express from 'express'
+import ejs from 'ejs'
+import cookieParser from 'cookie-parser'
 
-const Theme = require('./theme.js')
+import Theme from './theme'
 
 const app = express()
 const port = 3000
@@ -50,7 +49,7 @@ const routing = () => {
 
         // Actual settings page that lets the user customisable the page with.
         app.get('/settings', (req, res) => {
-            res.sendFile(__dirname + '/csp/edit.html')
+            res.sendFile(__dirname + '/csp/settings.html')
         })
     }
 
