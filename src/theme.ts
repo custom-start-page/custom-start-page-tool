@@ -1,5 +1,19 @@
 const fs = require('fs')
 
+export interface InterfaceMetaAuthor {
+    name: string;
+    link: string;
+}
+
+export interface InterfaceMeta {
+    version: string;
+    name: string;
+    slug: string;
+    author: InterfaceMetaAuthor;
+    preview: string;
+    features: string[];
+}
+
 export default class Theme {
     private _path: string = './'
     constructor() {
@@ -16,7 +30,7 @@ export default class Theme {
 
         return 'No about. 😢'
     }
-    getMeta(): object {
+    getMeta(): InterfaceMeta {
         const meta = JSON.parse(fs.readFileSync(this._path + '/manifest/meta.json', { encoding: 'utf8', flag: 'r' }))
 
         return meta

@@ -1,6 +1,7 @@
 import express from 'express'
 import ejs from 'ejs'
 import cookieParser from 'cookie-parser'
+import cheerio from 'cheerio'
 
 import Theme from './theme'
 
@@ -14,6 +15,7 @@ export default class Server {
     constructor(obj: ServerParameters) {
         this._app.use(cookieParser())
 
+        this._hostIndexWrapper()
         this._hostUserStartPage()
         this._hostSettings()
 
@@ -21,36 +23,70 @@ export default class Server {
             console.log(`Example app listening at http://localhost:${obj.port}`)
         })
     }
+    /**
+     * Wrap the users index page using an iframe so things can be added outside of the page.
+     */
+    private _hostIndexWrapper() {
+        this._app.get('/', (req, res) => {
+            res.sendFile(__dirname + '/csp/wrapper.html')
+        })
+    }
+    /**
+     * Host the users custom start page.
+     */
     private _hostUserStartPage() {
         this._app.use(express.static('.', {
             index: false,
         }))
 
-        this._app.get('/', (req, res) => {
-            if (this._theme.isIndexTemplate()) {
-                const dataCookie = req.cookies['customstart-data']
-                let data;
+        this._app.get('/index', (req, res) => {
+            const dataCookie = req.cookies['customstart-data']
+            let data: object
 
-                if (dataCookie != null) {
-                    data = JSON.parse(dataCookie)
-                } else {
-                    data = this._theme.getDefaultdata()
-                }
-
-                const template = this._theme.getIndexTemplate()
-                const html = ejs.render(template, { data: data })
-
-                res.send(html)
+            if (dataCookie != null) {
+                data = JSON.parse(dataCookie)
             } else {
-                this._app.get('/', (req, res) => {
-                    const html = this._theme.getIndexHtml()
-
-                    res.send(html)
-                })
-
+                data = this._theme.getDefaultdata()
             }
+
+            let html = this._getUserStartPageHtml(data)
+
+            html = this._insertStartPageMeta(html)
+
+            res.send(html)
         })
     }
+    private _insertStartPageMeta(html: string): string {
+        const meta = this._theme.getMeta()
+        const $ = cheerio.load(html)
+
+        // Remove existing meta.
+        $('head title').replaceWith('<!-- Removed custom title -->')
+        $('head meta[name="description"]').replaceWith('<!-- Removed custom meta description. -->')
+
+
+        // Add my meta.
+        $('head').append('<!-- Meta injected by Custom Start Page')
+        $('head').append('<base target="_top">\r\n') // Ensure the page always targets the top (if loaded in an iframe).
+        $('head').append(`<title>${meta.name} | Custom Start Page</title>\r\n`)
+        // $('head').append(`<meta name="description" content="${meta.name} is a free, open source and customisable start page for your browser, hosted by Custom Start Page.">\r\n`)
+
+        return $.html()
+    }
+    private _getUserStartPageHtml(data: object): string {
+        if (this._theme.isIndexTemplate()) {
+            const template = this._theme.getIndexTemplate()
+
+            return ejs.render(template, { data: data })
+        } else {
+            this._app.get('/', (req, res) => {
+                return this._theme.getIndexHtml()
+            })
+        }
+    }
+    /**
+     * Host the settings page.
+     */
     private _hostSettings() {
         // Files for the settings page to work.
         this._app.use('/csp', express.static(__dirname + '/csp'))

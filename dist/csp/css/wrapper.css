@@ -1,0 +1,34 @@
+html {
+    height: 100%;;
+    overflow: hidden;
+}
+
+body {
+    height: 100%;;
+    margin: 0;
+    font-size: 0; /* hide whitespace hack */
+}
+
+iframe {
+    border: 0;
+}
+
+iframe#startpage {
+    width: 100%;
+    height: 100%;;
+}
+
+iframe#settings {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;;
+    transition: all 0.3s;
+    transform: translateX(calc(100% - 5px));
+}
+
+iframe#settings:hover, iframe#settings.hovered {
+    box-shadow: 0 0 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    transform: translateX(0);
+}
