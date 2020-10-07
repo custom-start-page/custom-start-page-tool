@@ -10,7 +10,7 @@
 ## Getting started
 
 1. `npm install custom-start-page-tool --save`
-2. `node node_modules/custom-start-page-tool/index.js`
+2. `node node_modules/custom-start-page-tool/dist/index.js server`
 
 ## Developing this package
 

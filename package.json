@@ -1,8 +1,9 @@
 {
   "name": "custom-start-page-tool",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "A CLI tool for helping you develop start pages that integrate with https://customstart.page.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "tsc --watch",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,9 +1,10 @@
 import yargs from 'yargs'
 import Server from './server'
+import Test from './test'
 
 // const argv = yargs.options({
 //   port: { type: 'number' },
-// }).argv;
+// }).argv
 
 yargs
     .command('server [port]', 'start the server', (yargs) => {
@@ -23,7 +24,8 @@ yargs
         console.error('not yet implemented')
     })
     .command('test', 'test if your startpage is compatible with https://customstart.page', (yargs) => {}, (argv) => {
-        console.error('not yet implemented')
+        new Test()
+            .run()
     })
     .option('verbose', {
         alias: 'v',
