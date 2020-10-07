@@ -1,5 +1,7 @@
 # Custom Start Page Tool
 
+[![npm version](https://badge.fury.io/js/custom-start-page-tool.svg)](https://badge.fury.io/js/custom-start-page-tool)
+
 > A CLI tool for helping you develop start pages that integrate with https://customstart.page.
 
 ## Requirements
