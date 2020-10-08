@@ -3,7 +3,7 @@ import ejs from 'ejs'
 import cookieParser from 'cookie-parser'
 import cheerio from 'cheerio'
 
-import Theme from './theme'
+import Theme from './Theme'
 
 interface ServerParameters {
     port: number,
