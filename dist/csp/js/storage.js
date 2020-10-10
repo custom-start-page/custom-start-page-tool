@@ -85,8 +85,8 @@ class CustomStartStorage extends CustomStartStorageCookie {
   }
 
   async getDefault() {
-    const fetchDataUrl = // Should match `customstart.page` or `customstart.local`.
-    location.hostname.match('.customstart.') ? "/api/data" : "/manifest/defaultData.json";
+    const fetchDataUrl = "/api/data";
+
     return await fetch(fetchDataUrl).then(res => res.json()).then(out => {
       return out;
     }).catch(err => {

@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 
 export interface InterfaceMetaAuthor {
     name: string;
@@ -40,8 +40,13 @@ export default class Theme {
 
         return schema
     }
-    getDefaultdata(): object {
-        const data = JSON.parse(fs.readFileSync(this._path + '/manifest/defaultData.json', { encoding: 'utf8', flag: 'r' }))
+    getDefaultData(): object {
+        let data = this._readJsonFromFile(this._path + '/manifest/defaultData.json')
+
+        if (data != null)
+            return data;
+
+        data = this._readJsonFromFile(this._path + '/manifest/default-data.json')
 
         return data
     }
@@ -57,5 +62,21 @@ export default class Theme {
         const template = fs.readFileSync('index.ejs', { encoding: 'utf8', flag: 'r' })
 
         return template
+    }
+    _readJsonFromFile(path: string): object {
+        let file
+
+        try
+        {
+            file = fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
+        }
+        catch
+        {
+            return null
+        }
+
+        const schema = JSON.parse(file)
+
+        return schema
     }
 }

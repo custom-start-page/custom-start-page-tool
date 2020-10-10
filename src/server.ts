@@ -18,6 +18,7 @@ export default class Server {
         this._hostIndexWrapper()
         this._hostUserStartPage()
         this._hostSettings()
+        this._hostApi()
 
         this._app.listen(obj.port, () => {
             console.log(`Example app listening at http://localhost:${obj.port}`)
@@ -46,7 +47,7 @@ export default class Server {
             if (dataCookie != null) {
                 data = JSON.parse(dataCookie)
             } else {
-                data = this._theme.getDefaultdata()
+                data = this._theme.getDefaultData()
             }
 
             let html = this._getUserStartPageHtml(data)
@@ -94,6 +95,11 @@ export default class Server {
         // Actual settings page that lets the user customisable the page with.
         this._app.get('/settings', (req, res) => {
             res.sendFile(__dirname + '/csp/settings.html')
+        })
+    }
+    private _hostApi() {
+        this._app.get('/api/data', (req, res) => {
+            res.json(this._theme.getDefaultData())
         })
     }
 }
