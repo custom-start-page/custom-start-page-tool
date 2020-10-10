@@ -1,4 +1,5 @@
 import fs from 'fs'
+import MarkdownRenderer from './MarkdownRenderer'
 
 export interface InterfaceMetaAuthor {
     name: string;
@@ -16,19 +17,17 @@ export interface InterfaceMeta {
 
 export default class Theme {
     private _path: string = './'
+    private _markdownRenderer = new MarkdownRenderer()
     constructor() {
     }
-    getReadme(): string {
-        const readmeFilePath = this._path + '/readme.md'
+    getAbout(): string {
+        let md = this._readFromFile(this._path + '/manifest/readme.md')
+            || this._readFromFile(this._path + '/manifest/about.md')
 
-        if (fs.existsSync(readmeFilePath)) {
-            const readmeMd = fs.readFileSync(readmeFilePath, { encoding: 'utf8', flag: 'r' })
+        if (md == null)
+            return 'No about. 😢'
 
-            return readmeMd;
-            // return markdownRenderer(readmeMd)
-        }
-
-        return 'No about. 😢'
+        return this._markdownRenderer.render(md)
     }
     getMeta(): InterfaceMeta {
         const meta = JSON.parse(fs.readFileSync(this._path + '/manifest/meta.json', { encoding: 'utf8', flag: 'r' }))
@@ -63,20 +62,22 @@ export default class Theme {
 
         return template
     }
-    _readJsonFromFile(path: string): object {
-        let file
-
+    _readFromFile(path: string): string {
         try
         {
-            file = fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
+            return fs.readFileSync(path, { encoding: 'utf8', flag: 'r' })
         }
         catch
         {
             return null
         }
+    }
+    _readJsonFromFile(path: string): object {
+        const str = this._readFromFile(path)
 
-        const schema = JSON.parse(file)
+        if (str == null)
+            return null
 
-        return schema
+        return JSON.parse(str)
     }
 }

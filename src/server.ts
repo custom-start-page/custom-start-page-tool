@@ -16,6 +16,7 @@ export default class Server {
         this._app.use(cookieParser())
 
         this._hostIndexWrapper()
+        this._hostAbout()
         this._hostUserStartPage()
         this._hostSettings()
         this._hostApi()
@@ -30,6 +31,11 @@ export default class Server {
     private _hostIndexWrapper() {
         this._app.get('/', (req, res) => {
             res.sendFile(__dirname + '/csp/wrapper.html')
+        })
+    }
+    private _hostAbout() {
+        this._app.get('/about', (req, res) => {
+            res.send(this._theme.getAbout())
         })
     }
     /**
