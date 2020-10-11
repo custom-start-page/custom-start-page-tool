@@ -7,11 +7,19 @@ const Form = JSONSchemaForm.default;
 const storage = new CustomStartStorage();
 
 async function getSchema() {
-    return await fetch('/manifest/schema.json').then(res => res.json()).then(out => {
-        return out;
-    }).catch(err => {
-        throw err;
-    });
+    return await fetch('/api/schema')
+        .then(res => {
+            if (res.status >= 200 && res.status <= 299) {
+                return res.json();
+            } else {
+                throw Error(res.statusText);
+            }
+        })
+        .then(out => {
+            return out;
+        }).catch(err => {
+            throw err;
+        });
 }
 
 const del = () => {
@@ -23,12 +31,10 @@ const canReloadStartPage = () => {
     return typeof window.parent.reloadStartPage !== 'undefined';
 };
 
-async function render() {
-    const originalFormData = await storage.get();
-    const schema = await getSchema();
+async function renderForm(schema, originalFormData) {
     let formData = null;
 
-    let formAction = function () {
+    const formAction = function () {
         console.error('No action set.');
     };
 
@@ -67,5 +73,20 @@ async function render() {
                     )))), document.getElementById("form"));
 }
 
+async function render() {
+    try
+    {
+        const schema = await getSchema();
+        const originalFormData = await storage.get();
+
+        renderForm(schema, originalFormData)
+    }
+    catch
+    {
+        ReactDOM.render("No schema 😢.",
+            document.getElementById("form")
+        );
+    }
+}
+
 render();
-//# sourceMappingURL=edit.min.js.map

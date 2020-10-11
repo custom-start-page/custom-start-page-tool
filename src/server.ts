@@ -107,5 +107,14 @@ export default class Server {
         this._app.get('/api/data', (req, res) => {
             res.json(this._theme.getDefaultData())
         })
+
+        this._app.get('/api/schema', (req, res) => {
+            if (this._theme.schemaExists())
+                res.json(this._theme.getSchema())
+            else {
+                res.status(404)
+                res.send()
+            }
+        })
     }
 }

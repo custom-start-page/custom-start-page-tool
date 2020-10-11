@@ -8,8 +8,6 @@ import TestTool from './TestTool'
 describe('test', () => {
     describe('#run()', () => {
         it('should report index file exists', () => {
-            console.log('test')
-
             mock({
                 './index.html': '<html></html>',
             })
