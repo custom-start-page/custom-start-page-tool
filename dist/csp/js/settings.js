@@ -34,22 +34,14 @@ const canReloadStartPage = () => {
 async function renderForm(schema, originalFormData) {
     let formData = null;
 
-    const formAction = function () {
-        console.error('No action set.');
-    };
-
     const submit = data => {
         formData = data.formData;
         storage.set(formData);
-        console.log(formData);
-
-        formAction();
 
         if (canReloadStartPage())
             window.parent.reloadStartPage();
     };
 
-    const save = () => { };
     ReactDOM.render(
         React.createElement(Form, { schema: schema, formData: originalFormData, onSubmit: submit, },
             React.createElement("footer", { className: "sticky-footer" },
@@ -59,9 +51,9 @@ async function renderForm(schema, originalFormData) {
                             "button",
                             {
                                 className: "btn btn-primary",
-                                onClick: () => {
-                                    formAction = save;
-                                }
+                                // onClick: () => {
+                                //     formAction = save;
+                                // }
                             }, "Save" + (canReloadStartPage() ? " and update" : "")),
                         "\xA0",
                         canReloadStartPage() == false
