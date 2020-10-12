@@ -42,13 +42,9 @@ export default class Server {
 
         this._app.get('/index', (req, res) => {
             const dataCookie = req.cookies['customstart-data']
-            let data: object
-
-            if (dataCookie != null) {
-                data = JSON.parse(dataCookie)
-            } else {
-                data = this._theme.getDefaultData()
-            }
+            const data = dataCookie != null
+                ? JSON.parse(dataCookie)
+                : this._theme.getDefaultData()
 
             let html = this._getUserStartPageHtml(data)
 
@@ -80,9 +76,7 @@ export default class Server {
 
             return ejs.render(template, { data: data })
         } else {
-            this._app.get('/', (req, res) => {
-                return this._theme.getIndexHtml()
-            })
+            return this._theme.getIndexHtml();
         }
     }
     /**
