@@ -9,7 +9,7 @@ class CustomStartStorageCookie {
   }
 
   async set(obj) {
-    Cookies.set(this.key, JSON.stringify(obj), { expires: 365 })
+    Cookies.set(this.key, JSON.stringify(obj), { expires: 365, sameSite: 'strict' })
   }
 
   delete() {
